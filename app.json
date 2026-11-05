@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "MemePedia",
+    "slug": "memepedia",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.xw666.memepedia",
+      "infoPlist": {
+        "CFBundleDisplayName": "热梗百科",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.xw666.memepedia",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF3E0",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
