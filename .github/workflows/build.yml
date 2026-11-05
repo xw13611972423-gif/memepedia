@@ -60,6 +60,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Patch expo-modules-jsi (Swift 6.2 data race fix)
+        run: |
+          python3 - <<'PYEOF'
+          path = 'node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI/Runtime/Values/JavaScriptObject.swift'
+          s = open(path, encoding='utf-8').read()
+          rep = [
+            ('nonisolated(unsafe) let slot = buffer.baseAddress!', 'let slot = UncheckedSendable(buffer.baseAddress!)'),
+            ('expo.emplaceUndefined(slot)', 'expo.emplaceUndefined(slot.value)'),
+            ('expo.destroyValues(slot, 1)', 'expo.destroyValues(slot.value, 1)'),
+            ('encode(JavaScriptValue.Slot(slot), runtime)', 'encode(JavaScriptValue.Slot(slot.value), runtime)'),
+            ('body(slot.pointee)', 'body(slot.value.pointee)'),
+          ]
+          for old, new in rep:
+              assert s.count(old) == 1, f'not unique: {old}'
+              s = s.replace(old, new)
+          open(path, 'w', encoding='utf-8').write(s)
+          print('patched expo-modules-jsi')
+          PYEOF
+
       - name: Prebuild iOS project
         run: CI=1 npx expo prebuild --platform ios --no-install
 
